@@ -67,7 +67,7 @@ def get_aug_info(init_size, params):
                 x2 = t['size']
                 y2 = t['size']
             elif t['crop_position'] == 'tr':
-                x1 = w - self.size
+                x1 = w - t['size']
                 y1 = 0
                 x2 = w
                 y2 = t['size']
