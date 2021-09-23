@@ -206,3 +206,43 @@ def load_pretrain(pretrain_opt, net):
         for k in ignore_keys:
             logger.info('Caution: redundant key {}'.format(k))
         logger.info('Loaded {} key(s) from pre-trained model at {}'.format(len(loaded_keys), pretrain_opt.path))
+
+
+def get_metadata_from_ffprobe(filename):
+    """
+      Extract image format and frame rate from an ffprobe output with -show_streams option
+    :param filename: file containing metadata info
+    :return: image_format (w, h), frame_rate
+    """
+
+    streams = []
+    open_stream = False
+    with open(filename, "r") as f:
+        data = f.read().split('\n')
+
+    for line in data:
+        line = line.strip()
+
+        if line == "[STREAM]" and not open_stream:
+            open_stream = True
+            cur_stream = {}
+        elif line == "[/STREAM]" and open_stream:
+            open_stream = False
+            streams.append(cur_stream)
+            cur_stream = {}
+        elif line != "[STREAM]" and open_stream:
+            line_split = line.split("=")
+            if len(line_split) != 2:
+                continue
+            cur_stream[line_split[0]] = line_split[1]
+
+    video_stream = None
+    for stream in streams:
+        if stream["codec_type"] == "video":
+            video_stream = stream
+            break
+
+    if video_stream is None:
+        raise ValueError(f"Could not find video stream in file {filename}")
+
+    return (int(video_stream["width"]), int(video_stream["height"])), int(video_stream["r_frame_rate"][:2])
