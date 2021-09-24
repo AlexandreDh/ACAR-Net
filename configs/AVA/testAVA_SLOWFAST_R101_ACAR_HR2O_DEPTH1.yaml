@@ -39,7 +39,7 @@ loss:
 
 val:
     root_path: data
-    annotation_path: annotations/ava_val_v2.2_fair_0.85.pkl
+    annotation_path: annotations/test.pkl
     batch_size: 1
 
     augmentation:
