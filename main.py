@@ -13,6 +13,7 @@ from tensorboardX import SummaryWriter
 import torch
 import torch.optim as optim
 import torch.distributed as dist
+from torchsummary import summary
 from torch.nn.parallel import DistributedDataParallel
 
 from calc_mAP import run_evaluation
@@ -61,6 +62,7 @@ def main(local_rank, args):
     if rank == 0:
         logger.info(net)
         logger.info(parameters_string(net))
+        logger.info(summary(vgg, (3, 1280, 720)))
 
     if not opt.get('evaluate', False):
         train_aug = opt.train.augmentation

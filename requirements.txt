@@ -3,3 +3,4 @@ PyYAML>=5.4
 easydict
 numpy
 tensorboardX>=2.0
+torchsummary
