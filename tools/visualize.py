@@ -1,4 +1,5 @@
 import os
+import sys
 
 import numpy as np
 import cv2
@@ -160,7 +161,7 @@ if __name__ == "__main__":
     for c in idx_class:
         idx_2_class[c['id']] = c['name']
 
-    records = parse_csv_annotations("predict_epoch0_beer_pong_3.csv")
+    records = parse_csv_annotations(sys.argv[1])
 
     print("applying annotations")
     apply_annotations("data", records, idx_2_class)

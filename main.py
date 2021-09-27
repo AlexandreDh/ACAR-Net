@@ -62,7 +62,7 @@ def main(local_rank, args):
     if rank == 0:
         logger.info(net)
         logger.info(parameters_string(net))
-        logger.info(summary(vgg, (3, 1280, 720)))
+        logger.info(summary(net, (3, 1280, 720)))
 
     if not opt.get('evaluate', False):
         train_aug = opt.train.augmentation
