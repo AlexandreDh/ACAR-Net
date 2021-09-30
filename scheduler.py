@@ -95,7 +95,7 @@ class StepLRScheduler(_WarmUpLRScheduler):
     def __init__(self, optimizer, milestones, lr_mults, base_lr, warmup_lr, warmup_steps, last_iter=-1):
         super(StepLRScheduler, self).__init__(optimizer, base_lr, warmup_lr, warmup_steps, last_iter)
 
-        assert len(milestones) == len(lr_mults), "{} vs {}".format(milestone, lr_mults)
+        assert len(milestones) == len(lr_mults), "{} vs {}".format(milestones, lr_mults)
         for x in milestones:
             assert isinstance(x, int)
         if not list(milestones) == sorted(milestones):
