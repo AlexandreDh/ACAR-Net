@@ -20,3 +20,7 @@ def ava_criterion(pose_softmax=False):
     if pose_softmax:
         return ava_pose_softmax_criterion, ava_pose_softmax_func
     return nn.BCEWithLogitsLoss(), nn.Sigmoid()
+
+
+def pose_criterion():
+    return nn.CrossEntropyLoss(), nn.Softmax(dim=1)

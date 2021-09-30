@@ -3,7 +3,7 @@ evaluate: True
 pretrain:
     path: model_zoo/AVA-Kinetics_SLOWFAST_R101_ACAR_HR2O_DEPTH1.pth.tar
 
-result_path: experiments/AVA-Kinetics/evalAVA_SLOWFAST_R101_ACAR_HR2O_DEPTH1
+result_path: experiments/AVA-Kinetics/testAVA_SLOWFAST_R101_ACAR_HR2O_DEPTH1
 manual_seed: 1
 print_freq: 20
 
