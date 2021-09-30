@@ -69,6 +69,8 @@ class BasicNeck(nn.Module):
         
         rois = torch.FloatTensor(rois).cuda()
         targets = torch.stack(targets, dim=0).cuda()
+        if not self.multi_class:
+            targets = targets.squeeze(1)
         return {'num_rois': num_rois, 'rois': rois, 'roi_ids': roi_ids, 'targets': targets, 
                 'sizes_before_padding': sizes_before_padding,
                 'filenames': filenames, 'mid_times': mid_times, 'bboxes': bboxes, 'bbox_ids': bbox_ids}

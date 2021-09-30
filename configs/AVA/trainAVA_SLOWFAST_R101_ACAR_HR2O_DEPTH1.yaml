@@ -2,6 +2,7 @@ evaluate: True
 
 pretrain:
     path: model_zoo/AVA-Kinetics_SLOWFAST_R101_ACAR_HR2O_DEPTH1.pth.tar
+    delete_prefix: module.head.module.fc2.weight
 
 result_path: experiments/AVA-Kinetics/trainAVA_SLOWFAST_R101_ACAR_HR2O_DEPTH1
 manual_seed: 1
@@ -22,7 +23,7 @@ model:
                 num: 1
                 scale: 0.075
             num_classes: 3
-            multi_class: True
+            multi_class: False
     head:
         type: acar
         kwargs:
