@@ -256,6 +256,8 @@ def train_epoch(epoch, data_loader, model, criterion, optimizer, scheduler,
             loss = 0. * loss
 
         loss.backward()
+        # To prevent gradient from exploding
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=2.0, norm_type=2)
         optimizer.step()
 
         reduced_loss = loss.clone()
