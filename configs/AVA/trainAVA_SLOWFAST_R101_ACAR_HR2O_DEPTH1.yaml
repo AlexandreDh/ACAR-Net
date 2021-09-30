@@ -1,4 +1,4 @@
-evaluate: True
+evaluate: False
 
 pretrain:
     path: model_zoo/AVA-Kinetics_SLOWFAST_R101_ACAR_HR2O_DEPTH1.pth.tar
@@ -12,7 +12,7 @@ model:
     freeze_bn: True
     backbone:
         arch: slowfast101
-        learnable: True
+        learnable: False
         kwargs:
             alpha: 4
             beta: 0.125
