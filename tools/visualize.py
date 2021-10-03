@@ -83,7 +83,10 @@ def apply_annotations(root_path, records, idx_2_class, frame_rate=30, threshold=
                       interpolate=True,
                       line_width=2, font_scale=1.5):
     num_record = len(records)
+    print(f"num records {num_record}")
+
     frame_per_clip = 3 * frame_rate + 1
+    videos = []
     for idx, record in enumerate(records):
         print(f"applying records - {idx + 1} out of {num_record}", end='\r')
         start_frame = record["time"] * frame_rate + 1 - (frame_per_clip - 1) // 2
@@ -94,8 +97,14 @@ def apply_annotations(root_path, records, idx_2_class, frame_rate=30, threshold=
         is_first = idx == 0
 
         video_path = os.path.join(root_path, record["video"])
+        videos.append(record["video"])
 
-        height, width = cv2.imread(os.path.join(video_path, "images_%06d.jpg" % start_frame)).shape[:2]
+        try:
+            height, width = cv2.imread(os.path.join(video_path, "images_%06d.jpg" % start_frame)).shape[:2]
+        except Exception as e:
+            print(os.path.join(video_path, "images_%06d.jpg" % start_frame))
+            raise e
+
         bboxes, scores = get_bboxes_scores_from_record(record, width, height, idx_2_class, threshold)
 
         frames = list(range(start_frame, start_frame + frame_per_clip))
@@ -119,6 +128,18 @@ def apply_annotations(root_path, records, idx_2_class, frame_rate=30, threshold=
                     start_origin[1] += 20
 
             cv2.imwrite(image_path[:-4] + "_annotated.jpg", img)
+
+    videos = set(videos)
+
+    print("copying images without annotations")
+    for video in videos:
+        video_path = os.path.join(root_path, video)
+        for entry in os.scandir(video_path):
+            if entry.is_file() and entry.name.endswith(".jpg") and not entry.name.endswith("annotated.jpg"):
+                annot_path = entry.path[:-4] + "_annotated.jpg"
+                if not os.path.isfile(annot_path):
+                    ret = os.system(f"cp {entry.path} {annot_path}")
+                    assert ret == 0, f"Could not copy {entry.path} to {annot_path}"
 
 
 if __name__ == "__main__":
@@ -164,4 +185,4 @@ if __name__ == "__main__":
     records = parse_csv_annotations(sys.argv[1])
 
     print("applying annotations")
-    apply_annotations("data", records, idx_2_class)
+    apply_annotations("data", records, idx_2_class, frame_rate=int(sys.argv[2]))
