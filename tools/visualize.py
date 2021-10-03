@@ -80,7 +80,7 @@ def get_bboxes_scores_from_record(record, width, height, idx_2_class, threshold)
 
 
 def apply_annotations(root_path, records, idx_2_class, frame_rate=30, threshold=0.5,
-                      interpolate=True,
+                      interpolate=True, image_format="images_%06d.jpg",
                       line_width=2, font_scale=1.5):
     num_record = len(records)
     print(f"num records {num_record}")
@@ -100,9 +100,9 @@ def apply_annotations(root_path, records, idx_2_class, frame_rate=30, threshold=
         videos.append(record["video"])
 
         try:
-            height, width = cv2.imread(os.path.join(video_path, "images_%06d.jpg" % start_frame)).shape[:2]
+            height, width = cv2.imread(os.path.join(video_path, image_format % start_frame)).shape[:2]
         except Exception as e:
-            print(os.path.join(video_path, "images_%06d.jpg" % start_frame))
+            print(os.path.join(video_path, image_format % start_frame))
             raise e
 
         bboxes, scores = get_bboxes_scores_from_record(record, width, height, idx_2_class, threshold)
@@ -115,7 +115,7 @@ def apply_annotations(root_path, records, idx_2_class, frame_rate=30, threshold=
             if not is_last and cur_frame >= mid_frame_high_bound:
                 continue
 
-            image_path = os.path.join(video_path, "images_%06d.jpg" % cur_frame)
+            image_path = os.path.join(video_path, image_format % cur_frame)
 
             img = cv2.imread(image_path)
             for idx_bbox in range(bboxes.shape[0]):
