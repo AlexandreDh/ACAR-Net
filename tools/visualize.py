@@ -20,6 +20,7 @@ def parse_csv_annotations(filepath, num_classes=60):
         cur_time = -1
         cur_class = 1
         cur_bbox = None
+        cur_video = None
         cur_scores = {}
 
         while len(line) > 0:
@@ -28,7 +29,7 @@ def parse_csv_annotations(filepath, num_classes=60):
             if cur_time == -1:
                 cur_time = float(line[1])
             if cur_time != float(line[1]):
-                cur_record["video"] = line[0]
+                cur_record["video"] = cur_video
                 cur_record["time"] = cur_time
                 records.append(cur_record)
                 cur_record = {"predictions": []}
@@ -37,6 +38,7 @@ def parse_csv_annotations(filepath, num_classes=60):
                 cur_time = float(line[1])
 
             if cur_class == 1:
+                cur_video = line[0]
                 cur_bbox = np.array([float(line[2]), float(line[3]), float(line[4]), float(line[5])])
 
             cur_scores[int(line[6])] = float(line[7])
