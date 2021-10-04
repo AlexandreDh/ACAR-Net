@@ -26,15 +26,15 @@ def parse_csv_annotations(filepath, num_classes=60):
             line = line.strip().split(",")
 
             if cur_time == -1:
-                cur_time = int(line[1])
-            if cur_time != int(line[1]):
+                cur_time = float(line[1])
+            if cur_time != float(line[1]):
                 cur_record["video"] = line[0]
                 cur_record["time"] = cur_time
                 records.append(cur_record)
                 cur_record = {"predictions": []}
                 cur_class = 1
                 cur_scores = {}
-                cur_time = int(line[1])
+                cur_time = float(line[1])
 
             if cur_class == 1:
                 cur_bbox = np.array([float(line[2]), float(line[3]), float(line[4]), float(line[5])])
@@ -85,13 +85,14 @@ def apply_annotations(root_path, records, idx_2_class, frame_rate=30, threshold=
     num_record = len(records)
     print(f"num records {num_record}")
 
-    frame_per_clip = 3 * frame_rate + 1
+    frame_per_clip = round(3 * frame_rate) + 1
     videos = []
     for idx, record in enumerate(records):
         print(f"applying records - {idx + 1} out of {num_record}", end='\r')
-        start_frame = record["time"] * frame_rate + 1 - (frame_per_clip - 1) // 2
-        mid_frame_low_bound = record["time"] * frame_rate + 1 - frame_rate // 2
-        mid_frame_high_bound = record["time"] * frame_rate + 1 + frame_rate // 2
+        mid_frame = round(record["time"] * frame_rate)
+        start_frame = mid_frame - (frame_per_clip - 1) // 2
+        mid_frame_low_bound = mid_frame - frame_rate // 2
+        mid_frame_high_bound = mid_frame + frame_rate // 2
 
         is_last = idx == num_record - 1
         is_first = idx == 0
