@@ -63,6 +63,13 @@ def get_bboxes_scores_from_record(record, width, height, idx_2_class, threshold)
 
     bboxes = bboxes.astype(np.int32)
 
+    def get_label_name(cls_id):
+        for idx, l in enumerate(idx_2_class):
+            if cls_id == l["id"]:
+                return l["name"]
+
+        raise ValueError(f"could not find label for {cls_id}")
+
     scores = [list(p["scores"].items()) for p in record["predictions"]]
     final_scores = []
     for score in scores:
@@ -79,7 +86,8 @@ def get_bboxes_scores_from_record(record, width, height, idx_2_class, threshold)
 
         for i in range(start_idx, len(score)):
             if score[i][1] > threshold:
-                bbox_score.append((idx_2_class[score[i][0]], score[i][1]))
+                l_name = get_label_name(score[i][0])
+                bbox_score.append((l_name, score[i][1]))
 
         final_scores.append(bbox_score)
 
@@ -193,4 +201,4 @@ if __name__ == "__main__":
     records = parse_csv_annotations(sys.argv[1])
 
     print("applying annotations")
-    apply_annotations("data", records, idx_2_class, frame_rate=int(sys.argv[2]))
+    apply_annotations("data", records, idx_class, frame_rate=int(sys.argv[2]))
