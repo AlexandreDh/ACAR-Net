@@ -73,7 +73,7 @@ train:
 
     scheduler:
         type: step
-        milestone_epochs: [2.6, 5.8]
+        milestone_epochs: [2, 4.8]
         lr_mults: [0.1, 0.1]
         base_lr: 0.008
         warmup_lr: 0.01
@@ -103,6 +103,3 @@ val:
                 step: 2
 
     with_label: True
-    eval_mAP:
-        labelmap: annotations/action_list.pbtxt
-        groundtruth: annotations/groundtruth.csv
