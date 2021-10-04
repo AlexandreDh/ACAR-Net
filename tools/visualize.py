@@ -68,11 +68,16 @@ def get_bboxes_scores_from_record(record, width, height, idx_2_class, threshold)
     for score in scores:
         bbox_score = []
         score.sort(key=lambda elt: elt[0])
-        posture_idx = np.argmax([s[1] for s in score[:13]])
 
-        bbox_score.append((idx_2_class[score[posture_idx][0]], score[posture_idx][1]))
+        start_idx = 0
+        if len(score) > 13:
+            posture_idx = np.argmax([s[1] for s in score[:13]])
 
-        for i in range(13, len(score)):
+            bbox_score.append((idx_2_class[score[posture_idx][0]], score[posture_idx][1]))
+
+            start_idx = 13
+
+        for i in range(start_idx, len(score)):
             if score[i][1] > threshold:
                 bbox_score.append((idx_2_class[score[i][0]], score[i][1]))
 
